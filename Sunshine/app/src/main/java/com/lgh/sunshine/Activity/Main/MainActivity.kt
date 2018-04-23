@@ -1,20 +1,24 @@
 package com.lgh.sunshine.Activity.Main
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import com.lgh.sunshine.Activity.Detail.DetailActivity
+import com.lgh.sunshine.Database.Entity.WeatherEntry
 import com.lgh.sunshine.R
 import com.lgh.sunshine.Utlity.InjectorUtils
 import java.util.*
 
-class MainActivity : AppCompatActivity(), ForecastAdapter.ForecastAdapterOnItemClickHandler
+
+class MainActivity : AppCompatActivity (), ForecastAdapter.ForecastAdapterOnItemClickHandler
 {
     private lateinit var mForecastAdapter: ForecastAdapter
     private lateinit var mRecyclerView: RecyclerView
@@ -40,19 +44,21 @@ class MainActivity : AppCompatActivity(), ForecastAdapter.ForecastAdapterOnItemC
 
         mRecyclerView.adapter = mForecastAdapter
 
-        val factory = InjectorUtils.provideMainActivityViewmOdelFactory(this.applicationContext)
+        val factory = InjectorUtils.provideMainActivityViewModelFactory(this.applicationContext)
         mViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
 
-
-
-        mViewModel.forecast.observe(this, android.arch.lifecycle.Observer {it ->
+        mViewModel.forecast.observe(this, android.arch.lifecycle.Observer {
+          
             mForecastAdapter.swapForecast(it!!.toList())
 
             if(mPosition == RecyclerView.NO_POSITION)
             {
                 mPosition = 0
             }
+
             mRecyclerView.smoothScrollToPosition(mPosition)
+
+            Log.i(javaClass.simpleName, "observe : ${it.size}")
 
             if(it != null && it.size != 0)
             {
@@ -63,9 +69,6 @@ class MainActivity : AppCompatActivity(), ForecastAdapter.ForecastAdapterOnItemC
                 showLoading()
             }
         })
-
-
-
     }
 
     override fun onItemClick(date: Date)
@@ -78,8 +81,8 @@ class MainActivity : AppCompatActivity(), ForecastAdapter.ForecastAdapterOnItemC
 
     fun showWeatherDataView()
     {
-        mLoadingIndicator.visibility = View.INVISIBLE
         mRecyclerView.visibility = View.VISIBLE
+        mLoadingIndicator.visibility = View.INVISIBLE
     }
 
     fun showLoading()

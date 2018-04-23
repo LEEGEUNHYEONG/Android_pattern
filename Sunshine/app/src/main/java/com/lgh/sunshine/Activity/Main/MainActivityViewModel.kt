@@ -7,7 +7,12 @@ import com.lgh.sunshine.Database.SunshineRepository
 
 class MainActivityViewModel(repository: SunshineRepository) : ViewModel()
 {
-    var repository = repository
-    var forecast : LiveData<List<ListWeatherEntry>> = repository.getCurrentWeatherForecasts()
+    private val mRepository:SunshineRepository = repository
 
+    val forecast:LiveData<List<ListWeatherEntry>>
+
+    init
+    {
+        forecast = mRepository.getCurrentWeatherForecasts()
+    }
 }

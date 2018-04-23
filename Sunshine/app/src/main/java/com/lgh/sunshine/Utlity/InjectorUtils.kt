@@ -35,7 +35,7 @@ class InjectorUtils
             return DetailViewModelFactory(repository, date)
         }
 
-        fun provideMainActivityViewmOdelFactory(context :Context) : MainViewModelFactory
+        fun provideMainActivityViewModelFactory(context :Context) : MainViewModelFactory
         {
             val repository = provideRepository(context.applicationContext)
             return MainViewModelFactory(repository)

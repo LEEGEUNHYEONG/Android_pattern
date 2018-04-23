@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 
 class WeatherNetworkDataSource
 {
-    var mDownloadedWeatherForecasts: MutableLiveData<Array<WeatherEntry>> = MutableLiveData<Array<WeatherEntry>>()
+    var mDownloadedWeatherForecasts: MutableLiveData<Array<WeatherEntry?>> = MutableLiveData<Array<WeatherEntry?>>()
 
     companion object
     {
@@ -70,6 +70,8 @@ class WeatherNetworkDataSource
 
     public fun fetchWeather()
     {
+        Log.i(javaClass.simpleName, "fetchWeather")
+
         executors.networkIO.execute({
             try
             {
@@ -77,12 +79,12 @@ class WeatherNetworkDataSource
                 Log.e(javaClass.simpleName,"${weatherRequestUrl.toString()}")
                 val jsonWeatherResponse = NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl!!)
 
-                val response: WeatherResponse = OpenWeatherJsonParser.parse(jsonWeatherResponse)!!
+                val response: WeatherResponse? = OpenWeatherJsonParser.parse(jsonWeatherResponse)
 
-                if (response != null && response.weatherForecast.size != 0)
+                if(response != null && response.weatherForecast != null)
                 {
+                    Log.i(javaClass.simpleName, "fetchWeather : ${response.weatherForecast.size} : ${response.weatherForecast[0]!!.date} : ${response.weatherForecast[0]!!.min} : ${response.weatherForecast[0]!!.max }")
                     mDownloadedWeatherForecasts.postValue(response.weatherForecast)
-
                 }
             }
             catch (e: Exception)

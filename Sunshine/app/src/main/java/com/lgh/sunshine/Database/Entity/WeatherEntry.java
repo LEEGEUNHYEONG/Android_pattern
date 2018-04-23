@@ -93,4 +93,20 @@ public class WeatherEntry
     {
         return degrees;
     }
+
+    @Override
+    public String toString()
+    {
+        return "WeatherEntry{" +
+                "id=" + id +
+                ", weatherIconId=" + weatherIconId +
+                ", date=" + date +
+                ", min=" + min +
+                ", max=" + max +
+                ", humidity=" + humidity +
+                ", pressure=" + pressure +
+                ", wind=" + wind +
+                ", degrees=" + degrees +
+                '}';
+    }
 }

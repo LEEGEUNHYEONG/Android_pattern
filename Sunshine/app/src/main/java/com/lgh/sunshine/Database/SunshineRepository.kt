@@ -1,6 +1,7 @@
 package com.lgh.sunshine.Database
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.lgh.sunshine.AppExecutors
 import com.lgh.sunshine.Database.Entity.ListWeatherEntry
@@ -21,11 +22,14 @@ class SunshineRepository private constructor(weatherDao: WeatherDao, weatherNetw
 
     init
     {
-        val networkData= weatherNetworkDataSource!!.mDownloadedWeatherForecasts
+        val networkData : MutableLiveData<Array<WeatherEntry?>> = weatherNetworkDataSource.mDownloadedWeatherForecasts
+
         networkData.observeForever({ it ->
             executors.diskIO.execute({
                 deleteOldData()
                 // todo
+                Log.i(javaClass.simpleName, " ${it!!.size}")
+                weatherDao.bulkInsert(*it as Array<WeatherEntry>)
                 //weatherDao.bulkInsert(it))
             })
         })

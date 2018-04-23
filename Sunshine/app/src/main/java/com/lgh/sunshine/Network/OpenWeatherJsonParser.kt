@@ -1,5 +1,6 @@
 package com.lgh.sunshine.Network
 
+import android.util.Log
 import com.lgh.sunshine.Database.Entity.WeatherEntry
 import com.lgh.sunshine.Utlity.SunshineDateUtils
 import org.jetbrains.annotations.Nullable
@@ -49,13 +50,13 @@ class OpenWeatherJsonParser
         }
 
         @Throws(JSONException::class)
-        private fun fromJson( forecastJson : JSONObject ) : Array<WeatherEntry>
+        private fun fromJson( forecastJson : JSONObject ) : Array<WeatherEntry?>
         {
+            Log.i(javaClass.simpleName, "fromJson")
+
             val jsonWeatherArray = forecastJson.getJSONArray(OWM_LIST)
 
-            //  todo
-            var weatherEntries : Array<WeatherEntry> = arrayOf<WeatherEntry>()
-            //var weatherEntries = arrayOfNulls<WeatherEntry>(jsonWeatherArray.length())
+            var weatherEntries = arrayOfNulls<WeatherEntry>(jsonWeatherArray.length())
 
             val normalizedUtcStartDay = SunshineDateUtils.normalizedUtcMsForToday
 
@@ -65,6 +66,8 @@ class OpenWeatherJsonParser
 
                 val dateTimeMillis = normalizedUtcStartDay + SunshineDateUtils.DAY_IN_MILLIS * i
                 val weather : WeatherEntry = fromJson(dayForecast, dateTimeMillis)
+
+                Log.i(javaClass.simpleName, weather.toString())
 
                 weatherEntries[i] = weather
             }
@@ -95,6 +98,8 @@ class OpenWeatherJsonParser
         @Nullable
         fun parse(forecastJsonStr : String) : WeatherResponse?
         {
+            Log.i(javaClass.simpleName, "parse")
+
             val forecastJson = JSONObject(forecastJsonStr)
 
             if(hasHttpError(forecastJson))

@@ -2,6 +2,7 @@ package com.lgh.sunshine.Activity.Detail
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.lgh.sunshine.Database.Entity.WeatherEntry
@@ -9,6 +10,7 @@ import com.lgh.sunshine.R
 import com.lgh.sunshine.Utlity.InjectorUtils
 import com.lgh.sunshine.Utlity.SunshineDateUtils
 import com.lgh.sunshine.Utlity.SunshineWeatherUtils
+import com.lgh.sunshine.databinding.ActivityDetailBinding
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.extra_weather_details.view.*
 import kotlinx.android.synthetic.main.primary_weather_info.view.*
@@ -17,7 +19,6 @@ import java.util.*
 
 class DetailActivity : AppCompatActivity()
 {
-
     lateinit var viewModel : DetailActivityViewModel
 
     companion object
@@ -25,14 +26,16 @@ class DetailActivity : AppCompatActivity()
         val WEATHER_ID_EXTRA = "WEATHER_ID_EXTRA"
     }
 
-
     private val mViewModel: DetailActivityViewModel? = null
+
+    private var detailBinding : ActivityDetailBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+        //setContentView(R.layout.activity_detail)
 
+        detailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail)
 
         val timestamp = intent.getLongExtra(WEATHER_ID_EXTRA, -1)
         val date = Date(timestamp)
